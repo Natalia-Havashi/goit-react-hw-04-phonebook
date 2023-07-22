@@ -1,36 +1,36 @@
 import { ContainerForm } from 'components/styled.styled';
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { useState } from 'react';
 
-class Contacts extends Component {
-  state = {
-    name: '',
-    number: '',
+const Contacts = ({createUser}) =>  {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+ 
+
+  const handleChange = (e) => {
+   const {name,value} = e.target;
+   if(name === 'name'){
+    setName(value);
+   }else if(name === 'number'){
+    setNumber(value)
+   }
   };
 
-  handleChange = ({ target: { name, value } }) => {
-    this.setState({
-      [name]: value,
-    });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
     const data = {
-      ...this.state,
+      name: name,
+      number:number
     };
-    this.props.createUser(data);
-    this.setState({
-      name: '',
-      number: '',
-    });
+    createUser(data);
+    setName('');
+      setNumber('');
+    
   };
 
-  render() {
-    const { name, number } = this.state;
-    return (
+   return (
       <ContainerForm>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <label htmlFor="">Name</label>
           <input
             type="text"
@@ -38,7 +38,7 @@ class Contacts extends Component {
             pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required
-            onChange={this.handleChange}
+            onChange={handleChange}
             value={name}
           />
           <label htmlFor="">Number</label>
@@ -48,7 +48,7 @@ class Contacts extends Component {
             pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
-            onChange={this.handleChange}
+            onChange={handleChange}
             value={number}
           />
           <button>Add contact</button>
@@ -56,7 +56,7 @@ class Contacts extends Component {
       </ContainerForm>
     );
   }
-}
+
 
 Contacts.propTypes = {
   createUser: PropTypes.func.isRequired,
